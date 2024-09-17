@@ -32,6 +32,7 @@ public class FormatChecker {
         int expectedRows = 0;
         int expectedCols = 0;
         int actualRows = 0;
+        int lineNumber = 1;
         boolean isValid = true;
 
         if (fileScan.hasNextLine()) {
@@ -42,10 +43,68 @@ public class FormatChecker {
         } else {
             throw new Exception("File is empty");
         }
+        while (fileScan.hasNextLine()) {
+            String dataLine = fileScan.nextLine();
+            actualRows++;
+            Scanner lineScan = new Scanner(dataLine);
+            int colCount = 0;
+            while (lineScan.hasNext()) {
+                String token = lineScan.next();
+                try {
+                    Double.parseDouble(token);
+                    colCount++;
+                } catch (NumberFormatException e) {
+                    lineScan.close();
+                    fileScan.close();
+                    throw new Exception("Invalid number format");
+                }
+            }
+            if (colCount != expectedCols) {
+                lineScan.close();
+                fileScan.close();
+                throw new Exception("Column count does not match expected");
+
+            }
+            lineScan.close();
+        }
+        if (actualRows != expectedRows) {
+            fileScan.close();
+            throw new Exception("Rows do not match expected");
+        }
+        System.out.println("VALID");
 
     }
 
-    private static int[] readDimensions(String firstLine) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private static int[] readDimensions(String firstLine) throws Exception {
+        Scanner lineScan = new Scanner(firstLine);
+
+        int expectedRows = 0;
+        int expectedCols = 0;
+
+        if (lineScan.hasNextInt()) {
+            expectedRows = lineScan.nextInt();
+        } else {
+            lineScan.close();
+            throw new Exception("First line must contain exactly two integers.");
+        }
+        if (lineScan.hasNextInt()) {
+            expectedCols = lineScan.nextInt();
+        } else {
+            lineScan.close();
+            throw new Exception("First line must contain exactly two integers.");
+        }
+        if (lineScan.hasNext()) {
+            lineScan.close();
+            throw new Exception("First line must contain exactly two integers.");
+        }
+        if (expectedRows <= 0 || expectedCols <= 0) {
+            lineScan.close();
+            throw new Exception("Row and column counts must be positive integers. Found: rows = " + expectedRows + ", columns = " + expectedCols);
+        }
+        lineScan.close();
+        int[] dimensions = {expectedRows, expectedCols};
+
+        return dimensions;
+
     }
 }
