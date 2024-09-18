@@ -32,19 +32,21 @@ public class FormatChecker {
         int expectedRows = 0;
         int expectedCols = 0;
         int actualRows = 0;
-        int lineNumber = 1;
-        boolean isValid = true;
-
+    
         if (fileScan.hasNextLine()) {
             String firstLine = fileScan.nextLine();
             int[] dimensions = readDimensions(firstLine);
             expectedRows = dimensions[0];
             expectedCols = dimensions[1];
         } else {
+            fileScan.close();
             throw new Exception("File is empty");
         }
         while (fileScan.hasNextLine()) {
-            String dataLine = fileScan.nextLine();
+            String dataLine = fileScan.nextLine().trim();
+            if (dataLine.isEmpty()) {
+                continue;
+            }
             actualRows++;
             Scanner lineScan = new Scanner(dataLine);
             int colCount = 0;
@@ -63,7 +65,6 @@ public class FormatChecker {
                 lineScan.close();
                 fileScan.close();
                 throw new Exception("Column count does not match expected");
-
             }
             lineScan.close();
         }
@@ -71,10 +72,10 @@ public class FormatChecker {
             fileScan.close();
             throw new Exception("Rows do not match expected");
         }
+        fileScan.close();
         System.out.println("VALID");
-
     }
-
+    
     private static int[] readDimensions(String firstLine) throws Exception {
         Scanner lineScan = new Scanner(firstLine);
 
