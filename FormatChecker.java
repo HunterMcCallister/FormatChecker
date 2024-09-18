@@ -42,6 +42,7 @@ public class FormatChecker {
             fileScan.close();
             throw new Exception("File is empty");
         }
+        //trouble shoot this part
         while (fileScan.hasNextLine()) {
             String dataLine = fileScan.nextLine().trim();
             if (dataLine.isEmpty()) {
