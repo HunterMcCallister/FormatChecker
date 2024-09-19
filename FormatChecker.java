@@ -1,9 +1,22 @@
 
 import java.io.File;
 import java.util.Scanner;
-
+/**
+ * The FormatChecker Class validates the format of one or more files.
+ * Each file is checked for the specific formatting and the program will state
+ * whether the file is valid or invalid based on predetermined format of matching the number of rows and columns provided 
+ * in the first two lines of the file.
+ * 
+ * @author Hunter McCallister
+ */
 public class FormatChecker {
 
+    /**
+     * This is the main method that reads the command-line arguments and processes each file.
+     * It prints whether the file is VALID or INVALID based on its format.
+     * If no arguments are given it will print hte usage message for direction.
+     * @param args the name of the files to be checked 
+     */
     public static void main(String[] args) {
 
         String usageMsg = "Usage: $ java FormatChecker file1 [file2 ... fileN]";
@@ -27,6 +40,13 @@ public class FormatChecker {
 
     }
 
+    /**
+     * This method opens the file and checks if the file format is valid.
+     * The file must begin with two integers representing the expected number of rows and columns that are in the following lines
+     * Followed by rows of double values seperated by white space.
+     * @param filename the name of the file to be checked
+     * @throws Exception If the file format is invalid or if the file can't be found.
+     */
     public static void openFile(String filename) throws Exception {
         Scanner fileScan = new Scanner(new File(filename));
         int expectedRows = 0;
@@ -42,7 +62,7 @@ public class FormatChecker {
             fileScan.close();
             throw new Exception("File is empty");
         }
-        //trouble shoot this part
+        //trouble shoot this part causing valid3 to fail
         while (fileScan.hasNextLine()) {
             String dataLine = fileScan.nextLine().trim();
             if (dataLine.isEmpty()) {
@@ -76,7 +96,14 @@ public class FormatChecker {
         fileScan.close();
         System.out.println("VALID");
     }
-    
+   
+    /**
+     * This method is set up to read the first line of the file and get the number of rows and columns from it.
+     * The first line must contain EXACTLY two positive integers and no extra chars
+     * @param firstLine the first line of the file containing the dimensions
+     * @return an array list with [0] containing rows and [1] columns
+     * @throws Exception if the first line does not contain exactly two valid integers
+     */
     private static int[] readDimensions(String firstLine) throws Exception {
         Scanner lineScan = new Scanner(firstLine);
 
